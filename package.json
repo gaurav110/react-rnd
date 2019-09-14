@@ -90,7 +90,7 @@
     "tslint-plugin-prettier": "2.0.1",
     "tslint-react": "4.0.0",
     "typescript": "3.6.3",
-    "cross-env": "5.2.0"
+    "cross-env": "5.2.1"
   },
   "files": [
     "lib"
