@@ -1,6 +1,6 @@
 import React from "react";
 import Rnd from "../../src";
-import { style, parentBoundary } from "../styles";
+import { style, parentBoundary, selectorBoundary } from "../styles";
 
 type State = {
   x: number;
@@ -22,16 +22,15 @@ export default class Example extends React.Component<{}, State> {
 
   render() {
     return (
-      <div>
-        <div style={{ marginLeft: "30px" }}>
+      <div className="boundary" style={{ ...selectorBoundary, transform: "scale(0.6)" }}>
+        <div style={parentBoundary}>
           <Rnd
+            scale={0.6}
             style={style}
-            bounds="window"
-            default={{
-              width: 200,
-              height: 200,
-              x: 0,
-              y: 0,
+            bounds=".boundary"
+            size={{
+              width: this.state.width,
+              height: this.state.height,
             }}
             position={{
               x: this.state.x,
