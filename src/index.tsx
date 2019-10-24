@@ -2,6 +2,8 @@ import * as React from "react";
 import { DraggableEventHandler } from "react-draggable";
 import Resizable, { ResizableDirection } from "re-resizable";
 
+// FIXME: https://github.com/mzabriskie/react-draggable/issues/381
+//         I can not find `scale` too...
 type $TODO = any;
 const Draggable = require("react-draggable");
 
@@ -102,7 +104,7 @@ export type HandleStyles = {
   topRight?: React.CSSProperties;
 };
 
-export type Props = {
+export interface Props {
   dragGrid?: Grid;
   default?: {
     x: number;
@@ -143,7 +145,8 @@ export type Props = {
   cancel?: string;
   enableUserSelectHack?: boolean;
   scale?: number;
-};
+  [key: string]: any;
+}
 
 const resizableStyle = {
   width: "auto" as "auto",
@@ -166,7 +169,7 @@ interface DefaultProps {
   scale: number;
 }
 
-export default class Rnd extends React.Component<Props, State> {
+export class Rnd extends React.Component<Props, State> {
   public static defaultProps: DefaultProps = {
     maxWidth: Number.MAX_SAFE_INTEGER,
     maxHeight: Number.MAX_SAFE_INTEGER,
@@ -179,7 +182,7 @@ export default class Rnd extends React.Component<Props, State> {
     onDragStop: () => {},
   };
   resizable!: Resizable;
-  draggable!: $TODO; //Draggable;
+  draggable!: $TODO; // Draggable;
   isResizing = false;
 
   constructor(props: Props) {
@@ -309,7 +312,7 @@ export default class Rnd extends React.Component<Props, State> {
     const parentRect = parent.getBoundingClientRect();
     const parentLeft = parentRect.left;
     const parentTop = parentRect.top;
-    const left = (boundaryLeft - parentLeft) / scale
+    const left = (boundaryLeft - parentLeft) / scale;
     const top = boundaryTop - parentTop;
     if (!this.resizable) return;
     const offset = this.getOffsetFromParent();
@@ -537,6 +540,8 @@ export default class Rnd extends React.Component<Props, State> {
       resizeHandleClasses,
       enableResizing,
       resizeGrid,
+      resizeHandleWrapperClass,
+      resizeHandleWrapperStyle,
       scale,
       ...resizableProps
     } = this.props;
@@ -544,7 +549,7 @@ export default class Rnd extends React.Component<Props, State> {
     // Remove unknown props, see also https://reactjs.org/warnings/unknown-prop.html
     delete resizableProps.default;
 
-    const cursorStyle = disableDragging || dragHandleClassName ? { cursor: "normal" } : { cursor: "move" };
+    const cursorStyle = disableDragging || dragHandleClassName ? { cursor: "auto" } : { cursor: "move" };
     const innerStyle = {
       ...resizableStyle,
       ...cursorStyle,
@@ -561,9 +566,8 @@ export default class Rnd extends React.Component<Props, State> {
     return (
       <Draggable
         ref={(c: $TODO) => {
-          if (c) {
-            this.draggable = c;
-          }
+          if (!c) return;
+          this.draggable = c;
         }}
         handle={dragHandleClassName ? `.${dragHandleClassName}` : undefined}
         defaultPosition={defaultValue}
@@ -582,7 +586,7 @@ export default class Rnd extends React.Component<Props, State> {
       >
         <Resizable
           {...resizableProps}
-          ref={(c:$TODO) => {
+          ref={c => {
             if (c) {
               this.resizable = c;
             }
@@ -599,13 +603,14 @@ export default class Rnd extends React.Component<Props, State> {
           maxWidth={this.isResizing ? this.state.maxWidth : this.props.maxWidth}
           maxHeight={this.isResizing ? this.state.maxHeight : this.props.maxHeight}
           grid={resizeGrid}
-          handleWrapperClass={this.props.resizeHandleWrapperClass}
-          handleWrapperStyle={this.props.resizeHandleWrapperStyle}
+          handleWrapperClass={resizeHandleWrapperClass}
+          handleWrapperStyle={resizeHandleWrapperStyle}
           lockAspectRatio={this.props.lockAspectRatio}
           lockAspectRatioExtraWidth={this.props.lockAspectRatioExtraWidth}
           lockAspectRatioExtraHeight={this.props.lockAspectRatioExtraHeight}
           handleStyles={resizeHandleStyles}
           handleClasses={resizeHandleClasses}
+          scale={this.props.scale}
         >
           {children}
         </Resizable>

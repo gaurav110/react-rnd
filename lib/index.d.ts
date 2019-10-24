@@ -71,7 +71,7 @@ export declare type HandleStyles = {
     topLeft?: React.CSSProperties;
     topRight?: React.CSSProperties;
 };
-export declare type Props = {
+export interface Props {
     dragGrid?: Grid;
     default?: {
         x: number;
@@ -112,7 +112,8 @@ export declare type Props = {
     cancel?: string;
     enableUserSelectHack?: boolean;
     scale?: number;
-};
+    [key: string]: any;
+}
 interface DefaultProps {
     maxWidth: number;
     maxHeight: number;
@@ -124,7 +125,7 @@ interface DefaultProps {
     onDragStop: RndDragCallback;
     scale: number;
 }
-export default class Rnd extends React.Component<Props, State> {
+export declare class Rnd extends React.Component<Props, State> {
     static defaultProps: DefaultProps;
     resizable: Resizable;
     draggable: $TODO;
