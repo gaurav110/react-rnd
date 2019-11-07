@@ -85,7 +85,7 @@
   },
   "dependencies": {
     "re-resizable": "4.11.0",
-    "react-draggable": "git+https://github.com/gaurav110/react-draggable.git",
+    "react-draggable": "git+https://github.com/RakeshGuranani/react-draggable.git",
     "tslib": "1.9.3"
   }
 }
